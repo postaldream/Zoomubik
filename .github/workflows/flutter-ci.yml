@@ -1,5 +1,4 @@
 # Flutter CI — build release APK and upload artifact
-# Trigger: push to main, PRs to main or manual run
 name: Flutter CI
 
 on:
@@ -54,13 +53,8 @@ jobs:
           if [ -n "$KEYSTORE_BASE64" ]; then
             mkdir -p android/app
             echo "$KEYSTORE_BASE64" | base64 --decode > android/app/key.jks
-            # Create key.properties using environment variables
-            cat > android/key.properties <<EOF
-storePassword=${KEYSTORE_PASSWORD}
-keyPassword=${KEY_PASSWORD}
-keyAlias=${KEY_ALIAS}
-storeFile=app/key.jks
-EOF
+            # Use printf to write key.properties (avoids heredoc/YAML parsing issues)
+            printf "storePassword=%s\nkeyPassword=%s\nkeyAlias=%s\nstoreFile=app/key.jks\n" "$KEYSTORE_PASSWORD" "$KEY_PASSWORD" "$KEY_ALIAS" > android/key.properties
             echo "Keystore and key.properties created"
           else
             echo "No keystore secret provided — building unsigned APK"
