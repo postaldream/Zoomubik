@@ -43,3 +43,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Keystore/signing
+# Ignore keystore files and properties
+keystore.properties
+key.properties
+**/*.keystore
+**/*.jks
+**/upload-keystore.jks
