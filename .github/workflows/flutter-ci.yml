@@ -13,6 +13,8 @@ jobs:
     name: Build Android APK
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      PROJECT_DIR: zoomubik   # <- ajusta aquí si tu proyecto está en otra carpeta; si está en la raíz, deja vacío ''
 
     steps:
       - name: Checkout
@@ -21,27 +23,23 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'     # <- usa 'channel' para indicar stable, no 'flutter-version'
+          channel: 'stable'
           cache: true
 
-      - name: Cache Pub
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.pub-cache
-            .pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.yaml') }}
-
-      - name: Cache Gradle
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+      - name: Show repo root (debug)
+        run: |
+          echo "PWD: $(pwd)"
+          ls -la
 
       - name: Install dependencies
-        run: flutter pub get
+        run: |
+          if [ -n "$PROJECT_DIR" ]; then
+            echo "Using project dir: $PROJECT_DIR"
+            cd "$PROJECT_DIR"
+          else
+            echo "Using repo root as project dir"
+          fi
+          flutter pub get
 
       - name: Setup signing (optional, from Secrets)
         env:
@@ -50,6 +48,7 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
+          if [ -n "$PROJECT_DIR" ]; then cd "$PROJECT_DIR"; fi
           if [ -n "$KEYSTORE_BASE64" ]; then
             mkdir -p android/app
             echo "$KEYSTORE_BASE64" | base64 --decode > android/app/key.jks
@@ -60,10 +59,13 @@ jobs:
           fi
 
       - name: Build APK (release)
-        run: flutter build apk --release
+        run: |
+          if [ -n "$PROJECT_DIR" ]; then cd "$PROJECT_DIR"; fi
+          flutter build apk --release
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: zoomubik-apk
-          path: build/app/outputs/flutter-apk/*.apk
+          path: |
+            ${PROJECT_DIR:+${PROJECT_DIR}/}build/app/outputs/flutter-apk/*.apk
