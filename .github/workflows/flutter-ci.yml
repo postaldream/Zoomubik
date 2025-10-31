@@ -21,7 +21,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'
+          channel: 'stable'     # <- usa 'channel' para indicar stable, no 'flutter-version'
+          cache: true
 
       - name: Cache Pub
         uses: actions/cache@v4
@@ -49,11 +50,9 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          # If KEYSTORE_BASE64 is provided, create the keystore and key.properties
           if [ -n "$KEYSTORE_BASE64" ]; then
             mkdir -p android/app
             echo "$KEYSTORE_BASE64" | base64 --decode > android/app/key.jks
-            # Use printf to write key.properties (avoids heredoc/YAML parsing issues)
             printf "storePassword=%s\nkeyPassword=%s\nkeyAlias=%s\nstoreFile=app/key.jks\n" "$KEYSTORE_PASSWORD" "$KEY_PASSWORD" "$KEY_ALIAS" > android/key.properties
             echo "Keystore and key.properties created"
           else
@@ -67,4 +66,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: zoomubik-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/*.apk
