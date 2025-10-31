@@ -50,15 +50,15 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          # If you provided KEYSTORE_BASE64 and other secrets, this will create android/app/key.jks
-          # and android/key.properties so the Gradle signing config can pick it up.
+          # If KEYSTORE_BASE64 is provided, create the keystore and key.properties
           if [ -n "$KEYSTORE_BASE64" ]; then
             mkdir -p android/app
             echo "$KEYSTORE_BASE64" | base64 --decode > android/app/key.jks
+            # Create key.properties using environment variables
             cat > android/key.properties <<EOF
-storePassword=$KEYSTORE_PASSWORD
-keyPassword=$KEY_PASSWORD
-keyAlias=$KEY_ALIAS
+storePassword=${KEYSTORE_PASSWORD}
+keyPassword=${KEY_PASSWORD}
+keyAlias=${KEY_ALIAS}
 storeFile=app/key.jks
 EOF
             echo "Keystore and key.properties created"
@@ -68,9 +68,6 @@ EOF
 
       - name: Build APK (release)
         run: flutter build apk --release
-        env:
-          # ensure JAVA_HOME is set by flutter-action when needed
-          # (no extra env required here)
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
