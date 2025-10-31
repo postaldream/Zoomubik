@@ -1,4 +1,4 @@
-# Flutter CI — build release APK and upload artifact
+# Flutter CI — build release APK and upload artifact (auto-detect project dir)
 name: Flutter CI
 
 on:
@@ -12,9 +12,7 @@ jobs:
   build_apk:
     name: Build Android APK
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      PROJECT_DIR: zoomubik   # <- ajusta aquí si tu proyecto está en otra carpeta; si está en la raíz, deja vacío ''
+    timeout-minutes: 40
 
     steps:
       - name: Checkout
@@ -28,17 +26,39 @@ jobs:
 
       - name: Show repo root (debug)
         run: |
-          echo "PWD: $(pwd)"
+          echo "Workspace: $GITHUB_WORKSPACE"
           ls -la
+
+      - name: Detect Flutter project directory
+        id: detect
+        run: |
+          # If root contains pubspec.yaml and lib/main.dart, use root
+          if [ -f "pubspec.yaml" ] && [ -d "lib" ] && [ -f "lib/main.dart" ]; then
+            proj="."
+          else
+            # search up to depth 3 for pubspec.yaml (skip .github)
+            proj=$(find . -maxdepth 3 -type f -name pubspec.yaml -not -path "./.github/*" -printf '%h\n' | head -n 1 || true)
+          fi
+          if [ -z "$proj" ]; then
+            echo "No Flutter project (pubspec.yaml) found within depth 3. Repo layout:"
+            find . -maxdepth 2 -type d -print
+            echo "ERROR_NO_PROJECT" >&2
+            exit 1
+          fi
+          # normalize path (remove leading ./)
+          proj=${proj#./}
+          echo "Detected project dir: $proj"
+          echo "project_dir=$proj" >> "$GITHUB_OUTPUT"
+
+      - name: Flutter doctor (debug)
+        run: |
+          echo "Using project dir: ${{ steps.detect.outputs.project_dir }}"
+          # run flutter doctor
+          flutter doctor -v
 
       - name: Install dependencies
         run: |
-          if [ -n "$PROJECT_DIR" ]; then
-            echo "Using project dir: $PROJECT_DIR"
-            cd "$PROJECT_DIR"
-          else
-            echo "Using repo root as project dir"
-          fi
+          cd "${{ steps.detect.outputs.project_dir }}"
           flutter pub get
 
       - name: Setup signing (optional, from Secrets)
@@ -48,7 +68,7 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          if [ -n "$PROJECT_DIR" ]; then cd "$PROJECT_DIR"; fi
+          cd "${{ steps.detect.outputs.project_dir }}"
           if [ -n "$KEYSTORE_BASE64" ]; then
             mkdir -p android/app
             echo "$KEYSTORE_BASE64" | base64 --decode > android/app/key.jks
@@ -60,12 +80,24 @@ jobs:
 
       - name: Build APK (release)
         run: |
-          if [ -n "$PROJECT_DIR" ]; then cd "$PROJECT_DIR"; fi
+          cd "${{ steps.detect.outputs.project_dir }}"
+          # sanity check
+          if [ ! -f "lib/main.dart" ]; then
+            echo "lib/main.dart not found in project dir: $(pwd)"
+            echo "Make sure the Flutter app exists in the detected project directory" >&2
+            exit 1
+          fi
           flutter build apk --release
+
+      - name: Show build output (debug)
+        if: always()
+        run: |
+          echo "Listing build outputs (may be empty if build failed):"
+          find "${{ steps.detect.outputs.project_dir }}" -type f -path "*/build/app/outputs/flutter-apk/*" -maxdepth 6 -print || true
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: zoomubik-apk
-          path: |
-            ${PROJECT_DIR:+${PROJECT_DIR}/}build/app/outputs/flutter-apk/*.apk
+          # use a glob to find apk anywhere in the workspace
+          path: '**/build/app/outputs/flutter-apk/*.apk'
