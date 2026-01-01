@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:html' as html;
+import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(ZoomubikApp());
 
@@ -42,8 +42,11 @@ class HomePage extends StatelessWidget {
 }
 
 class FooterWidget extends StatelessWidget {
-  void _launchURL(String url) {
-    html.window.open(url, '_blank');
+  Future<void> _launchURL(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $urlString');
+    }
   }
 
   @override
@@ -105,20 +108,23 @@ class FooterWidget extends StatelessWidget {
   }
 
   Widget _buildFooterLink(String text, String url) {
-    return InkWell(
-      onTap: () => _launchURL(url),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: Colors.indigo[700],
-            fontSize: 14,
-            decoration: TextDecoration.none,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: InkWell(
+        onTap: () => _launchURL(url),
+        hoverColor: Colors.indigo[50],
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Colors.indigo[700],
+              fontSize: 14,
+              decoration: TextDecoration.none,
+            ),
           ),
         ),
       ),
-      onHover: (hovering) {},
     );
   }
 }
