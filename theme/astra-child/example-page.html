@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo - Sección Publicar | Zoomubik</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            padding-bottom: 100px; /* Space for sticky footer */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .content-section {
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        .content-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        /* Publication Section Styles */
+        #publicar-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        #publicar-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Button to show form (if form is initially hidden) */
+        .mostrar-formulario-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background 0.3s;
+        }
+
+        .mostrar-formulario-btn:hover {
+            background: #5568d3;
+        }
+
+        /* Example: Hidden form state */
+        #publicar-section.hidden {
+            display: none;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .demo-info {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .demo-info strong {
+            color: #856404;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            #publicar-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>🚗 Zoomubik</h1>
+        <p>Tu plataforma para comprar y vender vehículos</p>
+    </div>
+
+    <div class="container">
+        <div class="demo-info">
+            <strong>📌 Nota de Demostración:</strong> Esta es una página de ejemplo que muestra cómo estructurar
+            la sección de publicación para que funcione correctamente con el botón sticky "Publicar" del footer.
+        </div>
+
+        <div class="content-section">
+            <h2>Bienvenido a Zoomubik</h2>
+            <div class="card">
+                <p>Zoomubik es la plataforma líder para comprar y vender vehículos en línea. 
+                   Publica tu anuncio de forma rápida y sencilla.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Últimos Anuncios</h2>
+            <div class="card">
+                <h3>Toyota Corolla 2020</h3>
+                <p>Excelente estado, único dueño, todos los servicios al día.</p>
+                <p><strong>Precio:</strong> $15,000</p>
+            </div>
+            <div class="card">
+                <h3>Honda Civic 2019</h3>
+                <p>Como nuevo, poco kilometraje, full equipo.</p>
+                <p><strong>Precio:</strong> $18,500</p>
+            </div>
+        </div>
+
+        <!-- Example: Button to show the form (optional) -->
+        <div class="content-section" style="text-align: center;">
+            <button class="mostrar-formulario-btn" onclick="mostrarFormulario()">
+                📝 Mostrar Formulario de Publicación
+            </button>
+        </div>
+
+        <!-- THIS IS THE TARGET SECTION that the sticky footer button will scroll to -->
+        <div id="publicar-section" class="hidden">
+            <h2>📝 Publicar Nuevo Anuncio</h2>
+            <p style="margin-bottom: 20px; color: #666;">
+                Completa el formulario para publicar tu vehículo en Zoomubik
+            </p>
+
+            <form id="publicar-form" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="titulo">Título del Anuncio *</label>
+                    <input 
+                        type="text" 
+                        id="titulo" 
+                        name="titulo" 
+                        required 
+                        placeholder="Ej: Toyota Corolla 2020 - Excelente Estado"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="categoria">Categoría *</label>
+                    <select id="categoria" name="categoria" required>
+                        <option value="">Selecciona una categoría</option>
+                        <option value="autos">Autos</option>
+                        <option value="motos">Motos</option>
+                        <option value="camiones">Camiones</option>
+                        <option value="otros">Otros Vehículos</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="marca">Marca *</label>
+                    <input 
+                        type="text" 
+                        id="marca" 
+                        name="marca" 
+                        required 
+                        placeholder="Ej: Toyota"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="modelo">Modelo *</label>
+                    <input 
+                        type="text" 
+                        id="modelo" 
+                        name="modelo" 
+                        required 
+                        placeholder="Ej: Corolla"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="año">Año *</label>
+                    <input 
+                        type="text" 
+                        id="año" 
+                        name="año" 
+                        required 
+                        placeholder="Ej: 2020"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="precio">Precio *</label>
+                    <input 
+                        type="text" 
+                        id="precio" 
+                        name="precio" 
+                        required 
+                        placeholder="Ej: 15000"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">Descripción *</label>
+                    <textarea 
+                        id="descripcion" 
+                        name="descripcion" 
+                        required 
+                        placeholder="Describe tu vehículo en detalle..."
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="contacto">Email de Contacto *</label>
+                    <input 
+                        type="email" 
+                        id="contacto" 
+                        name="contacto" 
+                        required 
+                        placeholder="tu@email.com"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn-submit">
+                        ✨ Publicar Anuncio
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="content-section">
+            <h2>Cómo Funciona</h2>
+            <div class="card">
+                <h3>1. Regístrate</h3>
+                <p>Crea tu cuenta gratuita en Zoomubik</p>
+            </div>
+            <div class="card">
+                <h3>2. Publica</h3>
+                <p>Completa el formulario con los detalles de tu vehículo</p>
+            </div>
+            <div class="card">
+                <h3>3. Vende</h3>
+                <p>Conecta con compradores interesados y cierra la venta</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Zoomubik. Todos los derechos reservados.</p>
+        <p>Esta es una página de demostración</p>
+    </footer>
+
+    <script>
+        // Function to show the publication form
+        function mostrarFormulario() {
+            const section = document.getElementById('publicar-section');
+            if (section) {
+                section.classList.remove('hidden');
+                
+                // Scroll to the section
+                const yOffset = -120; // Offset for header/footer
+                const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                
+                window.scrollTo({
+                    top: y,
+                    behavior: 'smooth'
+                });
+
+                // Focus first input after scroll
+                setTimeout(() => {
+                    const firstInput = section.querySelector('input[type="text"]');
+                    if (firstInput) {
+                        firstInput.focus();
+                    }
+                }, 800);
+            }
+        }
+
+        // Handle form submission
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // In a real application, this would send data to the server
+            alert('¡Formulario enviado! En una aplicación real, esto publicaría tu anuncio.');
+            
+            // Reset form
+            document.getElementById('publicar-form').reset();
+            
+            // Optionally hide the form
+            document.getElementById('publicar-section').classList.add('hidden');
+            
+            // Scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Auto-show form if URL has #publicar
+        if (window.location.hash === '#publicar') {
+            mostrarFormulario();
+        }
+    </script>
+</body>
+</html>
