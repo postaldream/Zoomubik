@@ -1,0 +1,94 @@
+/*
+Theme Name: Astra Child - Zoomubik
+Theme URI: https://github.com/postaldream/Zoomubik
+Description: Child theme for Astra with custom footer and Publicar button functionality for Zoomubik
+Author: Zoomubik Team
+Author URI: https://zoomubik.com
+Template: astra
+Version: 1.0.0
+License: MIT
+License URI: https://opensource.org/licenses/MIT
+Text Domain: astra-child-zoomubik
+*/
+
+/**
+ * Import parent theme styles
+ */
+@import url('../astra/style.css');
+
+/**
+ * Custom styles for Zoomubik
+ */
+
+/* Ensure body has proper padding for sticky footer */
+body {
+    padding-bottom: 80px; /* Adjust based on footer height */
+}
+
+/* Publicar Section - Target section styling */
+#publicar-section {
+    scroll-margin-top: 120px; /* Adds spacing when scrolling to this element */
+    transition: all 0.3s ease;
+}
+
+/* Form visibility animations */
+#publicar-section.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    display: none;
+}
+
+#publicar-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+    display: block;
+    animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Form button styling */
+.mostrar-formulario-btn {
+    transition: all 0.3s ease;
+}
+
+.mostrar-formulario-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Input focus styling */
+#publicar-section input:focus,
+#publicar-section textarea:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    body {
+        padding-bottom: 70px;
+    }
+    
+    #publicar-section {
+        scroll-margin-top: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding-bottom: 65px;
+    }
+}
+
+/**
+ * Additional custom styles can be added below
+ */
