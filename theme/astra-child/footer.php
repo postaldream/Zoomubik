@@ -33,9 +33,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php
 	astra_body_bottom();
 	wp_footer();
-
-// Obtain URL of login Ultimate Member
-$um_login_url = function_exists('um_get_core_page_id') ? get_permalink( um_get_core_page_id('login') ) : home_url('/login/');
 ?>
 
 <!-- Sticky Publicar Button -->
@@ -104,7 +101,7 @@ $um_login_url = function_exists('um_get_core_page_id') ? get_permalink( um_get_c
 		stickyBtnId: 'sticky-publicar-btn',
 		targetSectionId: 'publicar-section',
 		formButtonClass: 'mostrar-formulario-btn',
-		loginUrl: '<?php echo esc_js($um_login_url); ?>',
+		loginUrl: '<?php echo esc_js( function_exists('astra_child_get_login_url') ? astra_child_get_login_url() : wp_login_url() ); ?>',
 		scrollOffset: 100, // Offset for sticky footer height
 		scrollDuration: 800,
 		retryDelay: 100,

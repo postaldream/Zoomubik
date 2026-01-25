@@ -107,7 +107,8 @@ if ( function_exists( 'um_get_core_page_id' ) ) {
 	function astra_child_um_login_redirect( $url ) {
 		// Check if there's a redirect parameter
 		if ( isset( $_GET['redirect_to'] ) ) {
-			return esc_url( $_GET['redirect_to'] );
+			// Validate redirect URL to prevent open redirect vulnerabilities
+			return wp_validate_redirect( $_GET['redirect_to'], home_url() );
 		}
 		
 		// Default redirect to home or specific page
@@ -227,10 +228,15 @@ function astra_child_get_login_url() {
 }
 
 /**
- * Debug helper - only show for administrators
+ * Debug helper - only show for administrators with proper nonce
  */
 function astra_child_debug_info() {
-	if ( ! current_user_can( 'administrator' ) || ! isset( $_GET['debug'] ) ) {
+	if ( ! current_user_can( 'administrator' ) ) {
+		return;
+	}
+	
+	// Verify debug mode is enabled with proper key
+	if ( ! isset( $_GET['astra_debug'] ) || $_GET['astra_debug'] !== wp_create_nonce( 'astra_debug_' . get_current_user_id() ) ) {
 		return;
 	}
 	
