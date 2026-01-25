@@ -22,7 +22,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Simulated user state - in a real app, this would come from authentication
+  // ⚠️ SECURITY WARNING: Simulated authentication for DEMO purposes only!
+  // DO NOT use in production - implement proper authentication service
+  // (Firebase Auth, Auth0, Supabase, etc.)
   bool _isLoggedIn = false;
   
   // Keys for scrolling to specific widgets
@@ -32,8 +34,14 @@ class _HomePageState extends State<HomePage> {
   // ScrollController for managing scroll position
   final ScrollController _scrollController = ScrollController();
   
-  // Height of the sticky footer (will be calculated dynamically)
+  // Height of the sticky footer
   static const double footerHeight = 72.0;
+  
+  // Padding below target when scrolling (prevents being too close to footer)
+  static const double scrollPadding = 20.0;
+  
+  // Delay after login before scrolling (allows modal close animation)
+  static const int loginToScrollDelayMs = 300;
   
   /// Handles the "Publicar" button press
   void _handlePublicarPress() {
@@ -90,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.of(context).pop();
                 print('User logged in successfully');
                 // After login, scroll to target
-                Future.delayed(Duration(milliseconds: 300), () {
+                Future.delayed(Duration(milliseconds: loginToScrollDelayMs), () {
                   _scrollToTarget();
                 });
               },
@@ -105,13 +113,14 @@ class _HomePageState extends State<HomePage> {
   /// Scrolls to the target content with proper offset for sticky footer
   void _scrollToTarget() {
     // Validate that target exists before attempting to scroll
-    final RenderBox? targetBox = _formKey.currentContext?.findRenderObject() as RenderBox?;
-    
-    if (targetBox == null) {
-      print('ERROR: Target form/content not found in DOM');
-      print('Cannot scroll to target - widget does not exist');
+    final renderObject = _formKey.currentContext?.findRenderObject();
+    if (renderObject is! RenderBox) {
+      print('ERROR: Target form/content not found in widget tree');
+      print('Cannot scroll to target - widget does not exist or is not rendered');
       return;
     }
+    
+    final RenderBox targetBox = renderObject;
     
     print('Target widget found - calculating scroll position');
     
@@ -130,7 +139,7 @@ class _HomePageState extends State<HomePage> {
       // 3. Sticky footer height (to prevent overlapping)
       // 4. Additional padding for better UX
       final currentScrollPosition = _scrollController.offset;
-      final targetScrollPosition = currentScrollPosition + targetPosition.dy - footerHeight - 20;
+      final targetScrollPosition = currentScrollPosition + targetPosition.dy - footerHeight - scrollPadding;
       
       print('Current scroll: $currentScrollPosition');
       print('Target scroll position: $targetScrollPosition');
