@@ -12,9 +12,6 @@ class ZoomubikApp extends StatelessWidget {
         primarySwatch: Colors.indigo,
       ),
       home: HomePage(),
-      routes: {
-        '/publicacion': (context) => PublicacionPage(),
-      },
     );
   }
 }
@@ -97,7 +94,7 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Bienvenida a Zoomubik',
+                'Bienvenido/a a Zoomubik',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 40),

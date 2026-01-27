@@ -16,7 +16,7 @@ void main() {
     await tester.pumpWidget(ZoomubikApp());
 
     // Verify that welcome message is displayed
-    expect(find.text('Bienvenida a Zoomubik'), findsOneWidget);
+    expect(find.text('Bienvenido/a a Zoomubik'), findsOneWidget);
     
     // Verify that the instruction text is displayed
     expect(find.text('Selecciona tu provincia y categoría:'), findsOneWidget);

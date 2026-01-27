@@ -12,7 +12,7 @@ Esta funcionalidad implementa un flujo simplificado de publicación que permite 
 
 La página principal ahora incluye:
 
-- **Dropdown Combinado**: Un `<select>` único con opciones en formato `provincia-categoria`
+- **Dropdown Combinado**: Un widget DropdownButton único con opciones en formato `provincia-categoria`
   - Ejemplo de opciones: `madrid-alquiler`, `barcelona-venta`, etc.
   - Formato de visualización: `MADRID - ALQUILER`, `BARCELONA - VENTA`, etc.
 
