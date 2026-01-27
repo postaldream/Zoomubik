@@ -222,15 +222,17 @@ class PublicacionPage extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Publicación creada en ${provincia!.toUpperCase()} para ${categoria!.toUpperCase()}',
-                      ),
-                    ),
-                  );
-                },
+                onPressed: provincia != null && categoria != null
+                    ? () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Publicación creada en ${provincia!.toUpperCase()} para ${categoria!.toUpperCase()}',
+                            ),
+                          ),
+                        );
+                      }
+                    : null,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
