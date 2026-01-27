@@ -11,20 +11,60 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:zoomubik/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('HomePage displays welcome message and dropdown', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(ZoomubikApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify that welcome message is displayed
+    expect(find.text('Bienvenida a Zoomubik'), findsOneWidget);
+    
+    // Verify that the instruction text is displayed
+    expect(find.text('Selecciona tu provincia y categoría:'), findsOneWidget);
+    
+    // Verify that the dropdown hint is displayed
+    expect(find.text('Seleccionar provincia y categoría'), findsOneWidget);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  testWidgets('PublicacionPage displays filtered form', (WidgetTester tester) async {
+    // Build the PublicacionPage with test parameters
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PublicacionPage(
+          provincia: 'madrid',
+          categoria: 'alquiler',
+        ),
+      ),
+    );
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify that the page displays the provincia and categoria
+    expect(find.text('Provincia: MADRID'), findsOneWidget);
+    expect(find.text('Categoría: ALQUILER'), findsOneWidget);
+    
+    // Verify that form fields are present
+    expect(find.text('Datos del Inmueble'), findsOneWidget);
+    expect(find.widgetWithText(TextField, 'Título'), findsOneWidget);
+    expect(find.widgetWithText(TextField, 'Descripción'), findsOneWidget);
+    expect(find.widgetWithText(TextField, 'Precio (€)'), findsOneWidget);
+    
+    // Verify that submit button is present
+    expect(find.text('Publicar'), findsOneWidget);
+  });
+
+  testWidgets('Dropdown selection navigates to PublicacionPage', (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(ZoomubikApp());
+
+    // Find and tap the dropdown
+    await tester.tap(find.text('Seleccionar provincia y categoría'));
+    await tester.pumpAndSettle();
+
+    // Find and tap the first option (madrid-alquiler)
+    await tester.tap(find.text('MADRID - ALQUILER').last);
+    await tester.pumpAndSettle();
+
+    // Verify that we navigated to the PublicacionPage
+    expect(find.text('Publicar Inmueble'), findsOneWidget);
+    expect(find.text('Provincia: MADRID'), findsOneWidget);
+    expect(find.text('Categoría: ALQUILER'), findsOneWidget);
   });
 }
